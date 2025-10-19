@@ -1,0 +1,46 @@
+name: Workflow de Actividad con Node.js y Trabajos Secuenciales
+
+
+on:
+  push:
+    branches: [ main ]
+    
+  workflow_dispatch:
+
+# Trabajos (Jobs)
+jobs:
+  # --- PRIMER TRABAJO ---
+  # Este trabajo se encarga de instalar Node.js
+  instalar-node:
+    name: 1. Instalar y Verificar Node.js
+    runs-on: ubuntu-latest
+    steps:
+      # Paso para descargar el código del repositorio
+      - name: Checkout del código
+        uses: actions/checkout@v4
+
+      # Paso CLAVE: Instala la versión 18 de Node.js
+      - name: Configurar Node.js v18
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18.x'
+      
+      # Paso para confirmar que la instalación fue exitosa
+      - name: Mostrar versión de Node.js
+        run: |
+          echo "Node.js se ha instalado correctamente."
+          node --version
+
+  # --- SEGUNDO TRABAJO () ---
+  trabajo-secundario:
+    name: 2. Ejecutar Tarea Secundaria
+    runs-on: ubuntu-latest
+    
+    needs: instalar-node
+
+    steps:
+      - name: Echo "Hi all" - Tarea completada
+        run: |
+          echo "El primer trabajo de instalar Node finalizó."
+          echo "Ahora ejecutando la tarea secundaria..."
+          echo "Hi all"
